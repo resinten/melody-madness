@@ -59,14 +59,6 @@ class GameManager < GameObject
   end
 
   def update!
-    Draw.rectangle!(
-      width: 640,
-      height: 320,
-      depth: 1,
-      position: Vector.new(0, 0),
-      color: Color.new(r: 1, g: 1, b: 1, a: 1)
-    )
-
     start_action! if Input.key_hit :s
     return unless @started
 
