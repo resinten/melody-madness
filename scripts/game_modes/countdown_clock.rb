@@ -6,21 +6,6 @@ module PlaySounds
     note = NoteUtils.midi_to_note_with_octave midi
     Tone.play! note[:note], note[:octave]
   end
-
-  def run_play_notes!
-    run! { |w| play_sounds w, 0.5 }
-  end
-
-  def play_sounds(wait, delay)
-    wait.next_frame until Input.key_hit(:p)
-    @notes.each do |note|
-      play_note! note
-      wait.for_seconds delay
-    end
-    wait.next_frame until Input.key_hit(:a)
-    @notes = []
-    run_countdown_clock!
-  end
 end
 
 # module for showing a timer
@@ -30,22 +15,18 @@ module CountdownClock
   COUNTDOWN_RADIUS = 72
   COUNTDOWN_CENTER = Vector.new(228, -88).freeze
 
-  def run_countdown_clock!
+  def run_countdown_clock!(&block)
     @disabled = false
-    run_for!(20) { |e, d| countdown_clock(e, d) }
+    run_for!(20) { |e, d| countdown_clock(e, d, &block) }
   end
 
-  def countdown_clock(elapsed, duration)
+  def countdown_clock(elapsed, duration, &block)
     draw_clock!(elapsed, duration) if elapsed < duration
     return unless elapsed > duration
 
     @disabled = true
-    run! do |wait|
-      wait.for_seconds 0.25
-      @notes.push(@current)
-      puts "length: #{@notes.length}"
-      @notes.length >= 8 ? run_play_notes! : run_countdown_clock!
-    end
+    block.call
+    nil
   end
 
   def draw_clock!(elapsed, duration)
@@ -71,7 +52,7 @@ module CountdownClock
     Draw.text!(
       depth: 56,
       position: COUNTDOWN_CENTER,
-      size: 60,
+      scale: Vector.new(60, 60),
       color: Color.new(r: 0.2, g: 0.2, b: 0.2),
       text: [0, time_remaining.round].max.to_s
     )

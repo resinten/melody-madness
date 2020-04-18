@@ -60,6 +60,7 @@ impl SlackModule {
                         channel: &group_id,
                         oldest: oldest_timestamp.as_deref(),
                         inclusive: Some(false),
+                        count: Some(1000),
                         ..Default::default()
                     },
                 );

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative './game_modes/chordal_catastrophe'
 require_relative './game_modes/melody_madness'
 require_relative './music_staff'
 
@@ -23,14 +24,14 @@ module GameManagerText
     end
   end
 
-  def fade_out_menu
+  def fade_out_menu(&block)
     run_for!(3) do |elapsed, duration|
       @text_alpha = [0, 1 - elapsed / duration].max
     end
     run! do |wait|
       wait.for_seconds(2.5)
       @staff = Game.create! MusicStaff.new
-      @game = Game.create! yield
+      @game = Game.create!(block.call)
     end
   end
 
@@ -75,14 +76,14 @@ class GameManager < GameObject
 
   def main_menu_update!
     if Input.key_hit :_1
-      fade_out_menu { MelodyMadness.new }
+      fade_out_menu { MelodyMadness::GameMode.new }
     elsif Input.key_hit :_2
-      fade_out_menu { MelodyMadness.new }
+      fade_out_menu { ChordalCatastrophe::GameMode.new }
     end
 
     Draw.text!(
       text: "St. Luke's\nCommunity Orchestra",
-      size: 48,
+      scale: Vector.new(48, 48),
       position: Vector.new(0, @text_y),
       color: Color.new(r: 0, g: 0, b: 0, a: @text_alpha)
     )
