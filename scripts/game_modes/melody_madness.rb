@@ -56,6 +56,8 @@ module MelodyMadness
 
     def draw_self!
       draw_notes!
+      return if @disabled
+
       draw_note!(
         @current,
         @notes.length,

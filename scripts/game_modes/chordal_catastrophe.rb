@@ -62,8 +62,8 @@ module ChordalCatastrophe
         until Input.key_hit(:a)
           if Input.key_hit(:p)
             @notes.each do |chord|
-              chord.each { |note| play_note! note }
-              wait.for_seconds 0.5
+              chord.uniq.each { |note| play_note! note }
+              wait.for_seconds 0.75
             end
           end
           wait.next_frame

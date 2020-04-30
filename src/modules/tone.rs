@@ -1,6 +1,6 @@
 use dathos_engine::{EngineModule, GameState};
 use rodio::source::{SineWave, Source};
-use rodio::{default_output_device, play_raw, Device};
+use rodio::{default_output_device, output_devices, play_raw, Device, DeviceTrait};
 use rutie::{AnyObject, Class, Integer, Module, NilClass, Object, Symbol};
 use std::time::Duration;
 
@@ -104,9 +104,12 @@ impl ToneInner {
 
 impl ToneModule {
     pub fn build() -> Self {
-        ToneModule {
-            device: default_output_device().unwrap(),
-        }
+        let device = output_devices()
+            .unwrap()
+            .find(|d| d.name().unwrap() == "ZoomAudioDevice")
+            .unwrap_or_else(|| default_output_device().unwrap());
+        println!("Using device: {:?}", device.name());
+        ToneModule { device }
     }
 }
 
@@ -136,7 +139,7 @@ where
                 play_raw(
                     &self.device,
                     SineWave::new(frequency.round() as u32)
-                        .take_duration(Duration::from_millis(250)),
+                        .take_duration(Duration::from_millis(500)),
                 );
             });
     }

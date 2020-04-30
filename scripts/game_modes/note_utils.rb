@@ -77,17 +77,19 @@ module NoteUtils
 
   def self.text_to_intra_octave(text)
     case " #{text} "
-    when / c ?(natural)? /i then 0
     when /( c ?sharp )|( d ?flat )/i then 1
-    when / d ?(natural)? /i then 2
     when /( d ?sharp )|( e ?flat )/i then 3
-    when /( e ?(natural)? )|( f ?flat )/i then 4
-    when /( f ?(natural)? )|( e ?sharp )/i then 5
     when /( f ?sharp )|( g ?flat )/i then 6
-    when / g ?(natural)? /i then 7
     when /( g ?sharp )|( a ?flat )/i then 8
-    when / a ?(natural)? /i then 9
     when /( a ?sharp )|( b ?flat )/i then 10
+    when / e ?sharp /i then 5
+    when / f ?flat /i then 4
+    when / c ?(natural)? /i then 0
+    when / d ?(natural)? /i then 2
+    when / e ?(natural)? /i then 4
+    when / f ?(natural)? /i then 5
+    when / g ?(natural)? /i then 7
+    when / a ?(natural)? /i then 9
     when / b /i then 11
     end
   end

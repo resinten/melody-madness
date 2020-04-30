@@ -2,4 +2,6 @@
 
 source 'https://rubygems.org'
 
+gem 'dotenv'
+
 gem 'rubocop', groups: %i[development test]
